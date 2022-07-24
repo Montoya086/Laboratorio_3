@@ -1,81 +1,18 @@
-/*
- * Universidad del Valle de Guatemala
- * Programación de plataformas móviles
- * Ultima modificación: 17/07/2022
- * Andrés Estuardo Montoya - 21552
- */ 
-import org.junit.Test
-import kotlin.test.*
-
-data class ItemData(
-    var originalPos: Int,
-    var originalValue: Any,
-	var type: String? = null,
-    var info: String? = null
-)
-/*
- * Función main
- */
-fun main() {
-    val result = processList(listOf(25, "Hola", null, false))
-    println(result)
-}
-/*
- * Función processList
- * Funcion en la cual se ingresa una lista de datos y devuelve otra lista con las caracteristicas de los datos ingresados
- */
-fun processList(inputList: List<Any?>?): List<ItemData>? {
-    var outputList: MutableList<ItemData> = mutableListOf<ItemData>()
-	if (inputList != null){
-        var cont: Int =0
-        for(item: Any? in inputList){
-            if (item != null){
-            var tipo: String?
-            var info: String?
-            when (item) {
-                is String ->{ 
-                    tipo="cadena"
-                    info= ("L"+item.length)
-                }
-                is Int -> {
-                    tipo="entero"
-                    if(item%10==0){
-                        info = "M10"
-                    }else if(item%5==0){
-                        info = "M5"
-                    }else if (item%2==0){
-                        info = "M2"
-                    }else{
-                        info = null
-                    }
-                }
-                is Boolean -> {
-                    tipo="Booleano"
-                    if (item){
-                        info="Verdadero"
-                    }else{
-                        info = "Falso"
-                    }
-                }
-                else -> {
-                    tipo=null
-                    info=null
-                }
-            }
-            
-            val newItem = ItemData(
-                originalPos = cont,
-                originalValue = item,
-                type = tipo,
-                info = info
-            )
-            
-            outputList.add(newItem)
-            }
-            cont++
+data class ItemData(var originalPos: Int,var originalValue: Any,var type: String? = null,var info: String? = null)
+fun main() {val result = processList(listOf(25, "Hola", null, false))
+    println(result)}
+fun processList(inputList: List<Any?>?): List<ItemData>? { //function that classify items on a list
+    val outputList: MutableList<ItemData> = mutableListOf<ItemData>()
+	if (inputList != null){ //if it's null, avoids it
+        var cont: Int =0 //position counter
+        for(item: Any? in inputList){//walk thru the array
+            if (item != null) outputList.add(when (item) {//evaluate the type
+                    is String -> ItemData(cont, item, "cadena", "L"+item.length)//is string
+                    is Int -> ItemData(cont, item, "entero", if(item%10==0) "M10" else if(item%5==0) "M5" else if(item%2==0) "M2" else null) //is integer
+                    is Boolean -> ItemData(cont, item, "Booleano", if (item) "Verdadero" else "Falso") //is boolean
+                    else -> ItemData(cont, item, null, null) // is another type
+            })
+            cont++//add 1 to position counter
         }
-    }else{
-        return null
-    }
-            return outputList
-}
+    }else return null
+    return outputList}
